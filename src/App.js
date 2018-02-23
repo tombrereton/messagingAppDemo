@@ -3,21 +3,36 @@ import MessageList from './components/MessageList';
 import MessageBox from './components/MessageBox';
 import Header from './components/Header';
 import firebase from 'firebase';
+import { base } from './base';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    var config = {
-      apiKey: process.env.REACT_APP_FIREBASE_KEY,
-      authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
-      databaseURL: process.env.REACT_APP_FIREBASE_DATABASE,
-      projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-      storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID
+    this.updateMessages = this.updateMessages.bind(this);
+    this.state = {
+      messages: []
     };
-    firebase.initializeApp(config);
   }
+
+  updateMessages(message){
+    this.setState({
+      messages: this.state.messages.concat([{message:message}])
+    })
+  }
+
+  componentWillMount(){
+    this.messagesRef = base.syncState('messages', {
+      context: this,
+      state: 'messages',
+      asArray:true
+    });
+  }
+
+  componentWillUnmount(){
+    base.removeBinding(this.messagesRef);
+  }
+
 
   render() {
     return (
@@ -26,7 +41,7 @@ class App extends Component {
         <div className="columns">
           <div className="column is-3"></div>
           <div className="column is-6">
-            <MessageList db={firebase} />
+            <MessageList messages={this.state.messages} />
           </div>
         </div>
         <div className="columns" />
