@@ -21,16 +21,13 @@ class MessageBox extends Component {
   onKeyup(e) {
     if (e.keyCode === 13 && trim(e.target.value) !== '') {
       e.preventDefault();
-      let dbCon = this.props.db.database().ref('/messages');
-      dbCon.push({
-        message: trim(e.target.value)
-      });
+      let newMessage = trim(e.target.value);
+      this.props.callBackToMessages(newMessage)
       this.setState({
         message: ''
       });
     }
   }
-
 
   render() {
     return (
