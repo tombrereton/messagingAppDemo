@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import MessageList from './components/MessageList';
 import MessageBox from './components/MessageBox';
 import Header from './components/Header';
-import firebase from 'firebase';
 import { base } from './base';
 
 class App extends Component {
@@ -15,21 +14,21 @@ class App extends Component {
     };
   }
 
-  updateMessages(message){
+  updateMessages(message) {
     this.setState({
-      messages: this.state.messages.concat([{message:message}])
+      messages: this.state.messages.concat([{ message: message }])
     })
   }
 
-  componentWillMount(){
+  componentWillMount() {
     this.messagesRef = base.syncState('messages', {
       context: this,
       state: 'messages',
-      asArray:true
+      asArray: true
     });
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     base.removeBinding(this.messagesRef);
   }
 
@@ -44,10 +43,11 @@ class App extends Component {
             <MessageList messages={this.state.messages} />
           </div>
         </div>
-        <div className="columns" />
-        <div className="column is-3"></div>
-        <div className="column is-6">
-          <MessageBox callBackToMessages={this.updateMessages} />
+        <div className="columns">
+          <div className="column is-3"></div>
+          <div className="column is-6">
+            <MessageBox callBackToMessages={this.updateMessages} />
+          </div>
         </div>
       </div>
     );
